@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Widget Loader</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .widget-container {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+    .widget-btn {
+      margin-bottom: 10px;
+    }
+
+    /* Style for Before/After Slider Widget */
+    .before-after-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .before-after-image {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: width 0.5s;
+    }
+    .before-after-slider {
+      position: absolute;
+      z-index: 3;
+      width: 4px;
+      height: 100%;
+      background-color: #fff;
+      cursor: ew-resize;
+      left: 50%;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Custom Widget Loader</h1>
+
+  <!-- Buttons to load widgets -->
+  <button class="widget-btn" onclick="loadWidget('beforeAfterSlider')">Load Before/After Slider</button>
+  <button class="widget-btn" onclick="loadWidget('customWidget')">Load Custom Widget</button>
+
+  <!-- Widget Display Area -->
+  <div id="widgetArea"></div>
+
+  <script>
+    function loadWidget(widgetName) {
+      const widgetArea = document.getElementById('widgetArea');
+
+      if (widgetName === 'beforeAfterSlider') {
+        widgetArea.innerHTML = `
+          <div class="before-after-container">
+            <img src="before.jpg" class="before-after-image" id="beforeImage" alt="Before" style="width: 50%;">
+            <img src="after.jpg" class="before-after-image" alt="After">
+            <div class="before-after-slider" id="slider"></div>
+          </div>
+        `;
+        initBeforeAfterSlider();
+      } else if (widgetName === 'customWidget') {
+        widgetArea.innerHTML = `
+          <div class="widget-container">
+            <h2>My Custom Widget</h2>
+            <p>This is where your custom widget will go.</p>
+          </div>
+        `;
+      }
+    }
+
+    function initBeforeAfterSlider() {
+      const slider = document.getElementById('slider');
+      const beforeImage = document.getElementById('beforeImage');
+
+      slider.addEventListener('mousedown', function (e) {
+        document.addEventListener('mousemove', moveSlider);
+        document.addEventListener('mouseup', function () {
+          document.removeEventListener('mousemove', moveSlider);
+        });
+      });
+
+      function moveSlider(e) {
+        let container = slider.parentElement.getBoundingClientRect();
+        let x = e.clientX - container.left;
+
+        if (x < 0) x = 0;
+        if (x > container.width) x = container.width;
+
+        slider.style.left = x + 'px';
+        beforeImage.style.width = x + 'px';
+      }
+    }
+  </script>
+</body>
+</html>
